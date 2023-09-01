@@ -1,8 +1,5 @@
 type EnsureSubType<T, P> = T extends P ? T : never
 
-type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
-type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N ? R : _TupleOf<T, N, [T, ...R]>;
-
 type RoleNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 type TankRole = `T${RoleNumber}`
 type HealerRole = `H${RoleNumber}`
@@ -28,7 +25,7 @@ type Player = EnsureSubType<{
   job?: Job
   role?: Role
 }, Entity>
-type Party<N extends number> = Tuple<Player, N>
+type Party = Player[]
 
 type Effect = EnsureSubType<{
   id: EnsureSubType<`effect-${string}`, string>
@@ -41,6 +38,8 @@ type Position = {
 type Zone = (position: Position) => boolean
 
 type State = {
+  of: Duty['id']
+
   zone: Zone
   
   activeEntities: Entity['id'][]
@@ -65,11 +64,11 @@ type Challenge = {
   next?: (state: State) => Challenge['id']
 }
 
-type Duty<N extends number> = {
+type Duty = {
   id: EnsureSubType<`duty-${string}`, string>
   
   name: string
-  playerCount: N
+  playerCount: number
 
   entities: Entity[]
   effects: Effect[]
@@ -85,12 +84,12 @@ type Solution = {
   mutateState: (state: State) => State
 }
 
-type Strategy<N extends number> = {
+type Strategy = {
   id: EnsureSubType<`strategy-${string}`, string>
-  target: Duty<N>['id']
+  target: Duty['id']
 
   name: string
 
-  party: Party<N>
+  party: Party
   solutions: Solution[]
 }
