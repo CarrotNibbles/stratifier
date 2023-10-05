@@ -36,6 +36,7 @@ type Effect = {
 type Position = {
   x: number
   y: number
+  heading: number // TODO: 0~360으로 제한해 정의하기
 }
 type Zone = (position: Position) => boolean
 
