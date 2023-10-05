@@ -27,11 +27,11 @@ type Player = EnsureSubType<{
 }, Entity>
 type Party = Player[]
 
-type Status = EnsureSubType<{
+type Effect = {
   id: EnsureSubType<`status-${string}`, string>
   type: 'enhancement' | 'enfeeblement'
   dispellable: boolean
-}, Entity>
+}
 
 type Position = {
   x: number
@@ -47,7 +47,7 @@ type State = {
   activeEntities: Entity['id'][]
 
   positions: { eid: Entity['id'], position: Position }[]
-  gainedEffects: { eid: Entity['id'], sid: Status['id'] }[]
+  gainedEffects: { eid: Entity['id'], sid: Effect['id'] }[]
 }
 
 type Result = {
@@ -73,7 +73,7 @@ type Duty = {
   playerCount: number
 
   entities: Entity[]
-  effects: Status[]
+  effects: Effect[]
   challenges: Challenge[]
 
   start: Challenge['id']
