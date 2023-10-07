@@ -45,7 +45,8 @@ type Path = (frame: number) => Position
 type State = {
   of: Duty['id']
 
-  frame: number
+  startFrame: number
+  endFrame: number
 
   zone: Zone
   
