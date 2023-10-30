@@ -27,27 +27,33 @@ type Player = EnsureSubType<{
 }, Entity>
 type Party = Player[]
 
-type Status = EnsureSubType<{
+type Effect = {
   id: EnsureSubType<`status-${string}`, string>
   type: 'enhancement' | 'enfeeblement'
   dispellable: boolean
-}, Entity>
+}
 
 type Position = {
   x: number
   y: number
+  heading?: number // TODO: 0~360으로 제한해 정의하기, 사실 필요 없을땐 안정의한 뒤에 path에 의존하게 보이면 될듯
 }
 type Zone = (position: Position) => boolean
 
+type Path = (frame: number) => Position
+
 type State = {
   of: Duty['id']
+
+  startFrame: number
+  endFrame: number
 
   zone: Zone
   
   activeEntities: Entity['id'][]
 
-  positions: { eid: Entity['id'], position: Position }[]
-  gainedEffects: { eid: Entity['id'], sid: Status['id'] }[]
+  paths: { eid: Entity['id'], path: Path }[]
+  gainedEffects: { eid: Entity['id'], sid: Effect['id'] }[]
 }
 
 type Result = {
@@ -64,6 +70,9 @@ type Challenge = {
   mutateState: (state: State) => State
 
   next?: (state: State) => Challenge['id']
+
+  startFrame: number
+  endFrame: number
 }
 
 type Duty = {
@@ -73,7 +82,7 @@ type Duty = {
   playerCount: number
 
   entities: Entity[]
-  effects: Status[]
+  effects: Effect[]
   challenges: Challenge[]
 
   start: Challenge['id']
@@ -95,3 +104,7 @@ type Strategy = {
   party: Party
   solutions: Solution[]
 }
+
+// 정리용
+// Duty: 하나의 보스(ex. 연영 1층 같은거)
+// Challenge: 하나의 페이즈(ex. 2페이즈 3페이즈 등등)
